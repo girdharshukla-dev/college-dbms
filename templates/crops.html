@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crops</title>
+</head>
+<body>
+    <h1>Crops</h1>
+    <nav>
+        <a href="/">Home</a> | 
+        <a href="/farmers">Farmers</a> | 
+        <a href="/markets">Markets</a>
+    </nav>
+    <hr>
+
+    <table border="1">
+        <tr>
+            <th>ID</th><th>Name</th><th>Season</th><th>Actions</th>
+        </tr>
+        {% for crop in crops %}
+        <tr>
+            <td>{{ crop.crop_id }}</td>
+            <td>{{ crop.crop_name }}</td>
+            <td>{{ crop.season }}</td>
+            <td><a href="{{ url_for('delete_crop', crop_id=crop.crop_id) }}">Delete</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Add Crop</h2>
+    <form method="POST" action="{{ url_for('add_crop') }}">
+        <label>Name:</label> <input name="crop_name" required><br>
+        <label>Season:</label> <input name="season"><br>
+        <button type="submit">Add</button>
+    </form>
+</body>
+</html>

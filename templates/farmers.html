@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Farmers</title>
+</head>
+<body>
+    <h1>Farmers</h1>
+    <nav>
+        <a href="/">Home</a> | 
+        <a href="/crops">Crops</a> | 
+        <a href="/markets">Markets</a>
+    </nav>
+    <hr>
+
+    <table border="1">
+        <tr>
+            <th>ID</th><th>Name</th><th>Village</th><th>Phone</th><th>Actions</th>
+        </tr>
+        {% for farmer in farmers %}
+        <tr>
+            <td>{{ farmer.farmer_id }}</td>
+            <td>{{ farmer.farmer_name }}</td>
+            <td>{{ farmer.village }}</td>
+            <td>{{ farmer.phone }}</td>
+            <td><a href="{{ url_for('delete_farmer', farmer_id=farmer.farmer_id) }}">Delete</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Add Farmer</h2>
+    <form method="POST" action="{{ url_for('add_farmer') }}">
+        <label>Name:</label> <input name="farmer_name" required><br>
+        <label>Village:</label> <input name="village"><br>
+        <label>Phone:</label> <input name="phone"><br>
+        <button type="submit">Add</button>
+    </form>
+</body>
+</html>

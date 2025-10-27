@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Markets</title>
+</head>
+<body>
+    <h1>Markets</h1>
+    <nav>
+        <a href="/">Home</a> | 
+        <a href="/farmers">Farmers</a> | 
+        <a href="/crops">Crops</a>
+    </nav>
+    <hr>
+
+    <table border="1">
+        <tr>
+            <th>ID</th><th>Name</th><th>Location</th><th>Actions</th>
+        </tr>
+        {% for market in markets %}
+        <tr>
+            <td>{{ market.market_id }}</td>
+            <td>{{ market.market_name }}</td>
+            <td>{{ market.location }}</td>
+            <td><a href="{{ url_for('delete_market', market_id=market.market_id) }}">Delete</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Add Market</h2>
+    <form method="POST" action="{{ url_for('add_market') }}">
+        <label>Name:</label> <input name="market_name" required><br>
+        <label>Location:</label> <input name="location"><br>
+        <button type="submit">Add</button>
+    </form>
+</body>
+</html>
