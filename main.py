@@ -37,6 +37,18 @@ def delete_farmer(farmer_id):
     db.commit()
     return redirect(url_for("list_farmers"))
 
+@app.route("/farmers/update", methods=["POST"])
+def update_farmer( ):
+    farmer_id = request.form["farmer_id"]
+    name = request.form["farmer_name"]
+    village = request.form.get("village","")
+    phone = request.form.get("phone","")
+    cursor.execute(
+        "UPDATE Farmers SET farmer_name=%s, village=%s, phone=%s WHERE farmer_id=%s",
+        (name, village, phone, farmer_id)
+    )
+    db.commit()
+    return redirect(url_for("list_farmers"))  
 
 ## crops
 @app.route("/crops")
@@ -62,6 +74,17 @@ def delete_crop(crop_id):
     db.commit()
     return redirect(url_for("list_crops"))
 
+@app.route("/crops/update", methods=["POST"])
+def update_crop():
+    crop_id = request.form["crop_id"]
+    name = request.form["crop_name"]
+    season = request.form.get("season", "")
+    cursor.execute(
+        "UPDATE Crops SET crop_name=%s, season=%s WHERE crop_id=%s",
+        (name, season, crop_id)
+    )
+    db.commit()
+    return redirect(url_for("list_crops"))
 
 ## markets
 @app.route("/markets")
@@ -84,6 +107,18 @@ def add_market():
 @app.route("/markets/delete/<int:market_id>")
 def delete_market(market_id):
     cursor.execute("DELETE FROM Markets WHERE market_id = %s", (market_id,))
+    db.commit()
+    return redirect(url_for("list_markets"))
+
+@app.route("/markets/update", methods=["POST"])
+def update_market():
+    market_id = request.form["market_id"]
+    name = request.form["market_name"]
+    location = request.form.get("location", "")
+    cursor.execute(
+        "UPDATE Markets SET market_name=%s, location=%s WHERE market_id=%s",
+        (name, location, market_id)
+    )
     db.commit()
     return redirect(url_for("list_markets"))
 

@@ -1,22 +1,65 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Markets</title>
+    <style>
+        body {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f7f7f7;
+            font-family: sans-serif;
+            line-height: 1.5;
+        }
+
+        .edit-modal {
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+        }
+
+        #modal-content {
+            border: 0.5px solid rgba(0, 0, 0, 0.5);
+            background: #ffffff;
+            padding: 20px 24px;
+            border-radius: 10px;
+            min-width: 320px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            font-family: sans-serif;
+            transition: all 0.5s ease;
+        }
+
+        #modal-content:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+    </style>
 </head>
+
 <body>
     <h1>Markets</h1>
     <nav>
-        <a href="/">Home</a> | 
-        <a href="/farmers">Farmers</a> | 
+        <a href="/">Home</a> |
+        <a href="/farmers">Farmers</a> |
         <a href="/crops">Crops</a>
     </nav>
     <hr>
 
     <table border="1">
         <tr>
-            <th>ID</th><th>Name</th><th>Location</th><th>Actions</th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Actions</th>
         </tr>
         {% for market in markets %}
         <tr>
@@ -24,6 +67,8 @@
             <td>{{ market.market_name }}</td>
             <td>{{ market.location }}</td>
             <td><a href="{{ url_for('delete_market', market_id=market.market_id) }}">Delete</a></td>
+            <td><button class="edit-button" data-id="{{ market.market_id }}" data-name="{{ market.market_name }}"
+                    data-location="{{ market.location }}">Edit</button></td>
         </tr>
         {% endfor %}
     </table>
@@ -34,5 +79,42 @@
         <label>Location:</label> <input name="location"><br>
         <button type="submit">Add</button>
     </form>
+
+    <div class="edit-modal" class="modal">
+        <div id="modal-content">
+            <div style="display: flex; justify-content: space-between;">
+                <div>Edit</div>
+                <button id="close-button">&times;</button>
+            </div>
+            <form method="POST" action="{{ url_for('update_market') }}">
+                <input type="hidden" id="modal-market-id" name="market_id">
+                <label>Name:</label> <input name="market_name" required><br>
+                <label>Location:</label> <input name="location"><br>
+                <button type="submit">Edit</button>
+            </form>
+        </div>
+    </div>
 </body>
+<script>
+    function $(element) {
+        return document.getElementById(element);
+    }
+    function $$(selector) {
+        return document.querySelector(selector);
+    }
+
+    document.addEventListener("click", (e) => {
+        if (e.target.classList.contains("edit-button")) {
+            const btn = e.target;
+            $$(".edit-modal").style.display = "flex";
+            $("modal-market-id").value = btn.dataset.id;
+            $$("#modal-content input[name='market_name']").value = btn.dataset.name;
+            $$("#modal-content input[name='location']").value = btn.dataset.location;
+        }
+    })
+    $("close-button").addEventListener("click", (e) => {
+        $$(".edit-modal").style.display = "none"
+    })
+</script>
+
 </html>
