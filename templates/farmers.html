@@ -1,20 +1,57 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Farmers</title>
+    <style>
+        .edit-modal {
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+        }
+
+        #modal-content {
+            border: 0.5px solid rgba(0, 0, 0, 0.5);
+            background: #ffffff;
+            padding: 20px 24px;
+            border-radius: 10px;
+            min-width: 320px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            font-family: sans-serif;
+            transition: all 0.5s ease;
+        }
+
+        #modal-content:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+    </style>
 </head>
+
 <body>
     <h1>Farmers</h1>
     <nav>
-        <a href="/">Home</a> | 
-        <a href="/crops">Crops</a> | 
+        <a href="/">Home</a> |
+        <a href="/crops">Crops</a> |
         <a href="/markets">Markets</a>
     </nav>
     <hr>
 
     <table border="1">
         <tr>
-            <th>ID</th><th>Name</th><th>Village</th><th>Phone</th><th>Actions</th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Village</th>
+            <th>Phone</th>
+            <th>Actions</th>
         </tr>
         {% for farmer in farmers %}
         <tr>
@@ -23,6 +60,10 @@
             <td>{{ farmer.village }}</td>
             <td>{{ farmer.phone }}</td>
             <td><a href="{{ url_for('delete_farmer', farmer_id=farmer.farmer_id) }}">Delete</a></td>
+            <td><button class="edit-button" data-id="{{ farmer.farmer_id }}" data-name="{{ farmer.farmer_name }}"
+                    data-village="{{ farmer.village }}" data-phone="{{ farmer.phone }}">
+                    Edit
+                </button></td>
         </tr>
         {% endfor %}
     </table>
@@ -34,5 +75,44 @@
         <label>Phone:</label> <input name="phone"><br>
         <button type="submit">Add</button>
     </form>
+
+    <div class="edit-modal" class="modal">
+        <div id="modal-content">
+            <div style="display: flex; justify-content: space-between;">
+                <div>Edit</div>
+                <button id="close-button">&times;</button>
+            </div>
+            <form method="POST" action="{{ url_for('add_farmer') }}">
+                <input type="" id="modal-farmer-id" name="farmer_id">
+                <label>Name:</label> <input name="farmer_name" required><br>
+                <label>Village:</label> <input name="village"><br>
+                <label>Phone:</label> <input name="phone"><br>
+                <button type="submit">Add</button>
+            </form>
+        </div>
+    </div>
 </body>
+<script>
+    function $(element) {
+        return document.getElementById(element);
+    }
+    function $$(selector) {
+        return document.querySelector(selector);
+    }
+
+    document.addEventListener("click", (e) => {
+        if (e.target.classList.contains("edit-button")) {
+            const btn = e.target;
+            $$(".edit-modal").style.display = "flex";
+            $("modal-farmer-id").value = btn.dataset.id;
+            $$("#modal-content input[name='farmer_name']").value = btn.dataset.name;
+            $$("#modal-content input[name='village']").value = btn.dataset.village;
+            $$("#modal-content input[name='phone']").value = btn.dataset.phone;
+        }
+    })
+    $("close-button").addEventListener("click", (e) => {
+        $$(".edit-modal").style.display = "none"
+    })
+</script>
+
 </html>
