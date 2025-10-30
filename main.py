@@ -123,6 +123,50 @@ def update_market():
     return redirect(url_for("list_markets"))
 
 
+## transactions
+## transactions
+@app.route("/transactions")
+def list_transactions():
+    cursor.execute("SELECT * FROM Transactions")
+    transactions = cursor.fetchall()
+    return render_template("transactions.html", transactions=transactions)
+
+@app.route("/transactions/add", methods=["POST"])
+def add_transaction():
+    farmer_id = request.form["farmer_id"]
+    crop_id = request.form["crop_id"]
+    market_id = request.form["market_id"]
+    quantity = request.form["quantity"]
+    price = request.form["price"]
+    cursor.execute(
+        "INSERT INTO Transactions (farmer_id, crop_id, market_id, quantity, price) VALUES (%s, %s, %s, %s, %s)",
+        (farmer_id, crop_id, market_id, quantity, price)
+    )
+    db.commit()
+    return redirect(url_for("list_transactions"))
+
+@app.route("/transactions/delete/<int:transaction_id>")
+def delete_transaction(transaction_id):
+    cursor.execute("DELETE FROM Transactions WHERE transaction_id = %s", (transaction_id,))
+    db.commit()
+    return redirect(url_for("list_transactions"))
+
+@app.route("/transactions/update", methods=["POST"])
+def update_transaction():
+    transaction_id = request.form["transaction_id"]
+    farmer_id = request.form["farmer_id"]
+    crop_id = request.form["crop_id"]
+    market_id = request.form["market_id"]
+    quantity = request.form["quantity"]
+    price = request.form["price"]
+    cursor.execute(
+        "UPDATE Transactions SET farmer_id=%s, crop_id=%s, market_id=%s, quantity=%s, price=%s WHERE transaction_id=%s",
+        (farmer_id, crop_id, market_id, quantity, price, transaction_id)
+    )
+    db.commit()
+    return redirect(url_for("list_transactions"))
+
+
 # ===== ROOT =====
 @app.route("/")
 def home():
