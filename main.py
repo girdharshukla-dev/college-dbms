@@ -33,7 +33,7 @@ def add_farmer():
 
 @app.route("/farmers/delete/<int:farmer_id>")
 def delete_farmer(farmer_id):
-    cursor.execute("DELETE FROM Farmers WHERE farmer_id = %s", (farmer_id))
+    cursor.execute("DELETE FROM Farmers WHERE farmer_id = %s", (farmer_id,))
     db.commit()
     return redirect(url_for("list_farmers"))
 
@@ -176,6 +176,7 @@ def home():
         <li><a href='/farmers'>Farmers</a></li>
         <li><a href='/crops'>Crops</a></li>
         <li><a href='/markets'>Markets</a></li>
+        <li><a href='/transactions'>Transactions</a></li>
     </ul>
     """
 
